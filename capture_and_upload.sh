@@ -1,3 +1,4 @@
+#!/bin/bash
 url="https://media.notmeta.io"
 bucket_name="media.notmeta.io"
 
