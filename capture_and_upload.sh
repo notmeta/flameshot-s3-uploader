@@ -18,7 +18,7 @@ if [[ $(file --mime-type -b $temp_file) != "image/png" ]]; then
   notify-send "Screenshot aborted" -a "Flameshot" && exit 1
 fi
 
-aws s3 cp "$temp_file" "s3://$bucket_name/$full_object_name" --profile flameshot-upload
+aws s3 cp "$temp_file" "s3://$bucket_name/$full_object_name" --quiet --profile flameshot-upload
 aws s3api put-object-tagging --bucket "$bucket_name" --key "$full_object_name" --tagging '{"TagSet": [{ "Key": "flameshot", "Value": "true" }]}' --profile flameshot-upload
 image_url="$url/$full_object_name"
 
