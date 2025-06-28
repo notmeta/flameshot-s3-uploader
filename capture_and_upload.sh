@@ -8,13 +8,17 @@ rand_file_name=$(openssl rand -hex 6)
 prefix=$(date +'%Y/%m/%d')
 full_object_name="$prefix/$rand_file_name.png"
 
-# Run flameshot --help for options
-flameshot gui -r > $temp_file
+if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+  # Fix flameshot on wayland https://github.com/flameshot-org/flameshot/issues/2364#issuecomment-2336826654
+  QT_QPA_PLATFORM=xcb flameshot gui -r > $temp_file
+else
+  flameshot gui -r > $temp_file
+fi
 
 # For some reason flameshot always seems to exit with 0 even when aborting the process
 # so we had to find a way around that.
 if [[ $(file --mime-type -b $temp_file) != "image/png" ]]; then
-	rm $temp_file
+  rm $temp_file
   notify-send "Screenshot aborted" -a "Flameshot" && exit 1
 fi
 
